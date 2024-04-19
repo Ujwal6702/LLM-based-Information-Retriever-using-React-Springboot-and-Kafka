@@ -1,0 +1,117 @@
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    /* background: black; */
+    .new-chat-header {
+      display: flex;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      .chats-text {
+        color: white;
+        margin: auto;
+        padding: 10px;
+        margin-left: 30px;
+        width: 60%;
+      }
+      .new-chat-button {
+        margin: auto;
+        align-items: center;
+        padding: 10px;
+        border-radius: 10px;
+        width: 100px;
+      }
+    }
+  .chat-history {
+    flex: 1;
+    overflow-y: auto;
+    border-right: 1px solid #37434a;
+    padding-right: 20px;
+    background-color: #222323; /* Grey background*/ 
+  }
+  
+  .chat-history .chat-item {
+    margin-bottom: 10px;
+  }
+    
+  .chat-space {
+    flex: 2;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat-area {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+  }
+  
+  .chat-area .chat-message {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    width: 95%;
+    margin-right: 10px;
+    margin-left: auto;
+  }
+  .chat-area .chat-message2 {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    width: 95%;
+    margin-left: 10px;
+    margin-right: auto;
+  }
+
+  .chat-area .sent {
+    background-color: #787c82; /* Green sent messages */
+  }
+  .chat-area .received {
+    background-color: rgb(226, 216, 203); /* Green sent messages */
+  }
+
+  .chat-input {
+    border-radius: 8px;
+    margin-bottom: 10px;
+    width: 100%;
+    font-size: 20px;
+    padding: 15px;
+    padding-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 98%;
+  }
+
+  .send-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #19abb5; /* Blue send button*/
+    color: black; /* Light grey text */
+    border: 1px solid rgba(136, 132, 132, 0.8); /* Corrected border syntax */
+    cursor: pointer;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 98%;
+  }
+
+  .chat-buttons {
+    width: 95%;
+    display: flex;
+    align-items: center;
+    margin: 8px auto;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0.1, 0.4); /* Corrected border syntax */
+    height: 60px;
+    background-color: #787c82;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adding shadow */
+    transition: background-color 0.3s ease; /* Adding transition for smoother hover effect */
+}
+
+.chat-buttons:hover {
+    background-color: rgb(128, 130, 131); /* Changing background color on hover */
+}
+}
