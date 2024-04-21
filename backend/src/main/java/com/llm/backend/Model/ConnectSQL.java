@@ -22,7 +22,7 @@ public class ConnectSQL {
     public void initiateConnection() {
         try {
             this.connect = DriverManager.getConnection(
-                "jdbc:mysql://" + host + ":" + port + "/",
+                "jdbc:mysql://" + host + ":" + port + "/LLMDB",
                 user,
                 password
             );
