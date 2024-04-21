@@ -1,22 +1,30 @@
 import mysql.connector
+from dotenv import load_dotenv
+import os
 
-password = "MySqL@123"
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+host = os.environ.get("SQL_HOST")
+password = os.environ.get("SQL_PASSWORD")
+user = os.environ.get("SQL_USERNAME")
+port = os.environ.get("SQL_PORT")
 
 def create_database():
     try:
         # Establishing connection to MySQL server
         connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password=password
+            host=host,
+            user=user,
+            password=password,
+            port=port
         )
 
         # Creating a cursor object using the cursor() method
         cursor = connection.cursor()
 
         # Creating a database if it doesn't exist
-        cursor.execute("DROP DATABASE IF EXISTS NexGenDB")
-        cursor.execute("CREATE DATABASE IF NOT EXISTS NexGenDB")
+        cursor.execute("DROP DATABASE IF EXISTS LLMDB")
+        cursor.execute("CREATE DATABASE IF NOT EXISTS LLMDB")
 
         print("Database created successfully")
 
@@ -36,7 +44,7 @@ def create_table():
             host="localhost",
             user="root",
             password=password,
-            database="NexGenDB"
+            database="LLMDB"
         )
 
         # Creating a cursor object using the cursor() method
@@ -78,7 +86,7 @@ def create_chat_history_table():
             host="localhost",
             user="root",
             password=password,
-            database="NexGenDB"
+            database="LLMDB"
         )
 
         # Creating a cursor object using the cursor() method

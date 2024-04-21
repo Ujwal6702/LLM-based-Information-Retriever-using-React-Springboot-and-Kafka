@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
-# import database
 
 load_dotenv()
 
@@ -28,7 +27,7 @@ google_api_key = os.getenv("API_KEY")
 
 genai.configure(api_key = google_api_key)
 
-def getPromptResponse( prompt, top_p = 0.9, top_k = 1, temp = 0.4):
+def getPromptResponse( prompt, top_p = 0.8, top_k = 2, temp = 0.9):
     """ Generate a response based on a user prompt using a generative AI model.
 
         Returns:
@@ -69,7 +68,7 @@ def getPromptResponse( prompt, top_p = 0.9, top_k = 1, temp = 0.4):
 
     return response.text
 
-def getChatResponse( prompt, top_p = 0.9, top_k = 1, temp = 0.4, history = []):
+def getChatResponse( prompt, top_p = 0.8, top_k = 2, temp = 0.9, history = []):
     """ Generate a response based on a user prompt using a generative AI model
         given the chat history.
 

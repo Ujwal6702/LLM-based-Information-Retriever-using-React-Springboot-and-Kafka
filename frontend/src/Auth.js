@@ -151,9 +151,12 @@ export default function Auth() {
               Submit
             </button>
           </div>
-          <p className="text-center mt-2">
-            Forgot <a href="#">password?</a>
-          </p>
+          {authMode === "signin"  ?(
+              <p className="text-center mt-2">
+              Forgot <a href="/forgotpassword">password?</a>
+            </p>
+            ):(<p></p>)}
+          
         </div>
       </form>
     </div>
