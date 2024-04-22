@@ -7,7 +7,6 @@ const Dashboard = () => {
   const [chats, setChats] = useState([[]]); // State to hold chat messages (array of chats)
   const [currentChatIndex, setCurrentChatIndex] = useState(0); // State to track the current chat index
   const [newMessage, setNewMessage] = useState(''); // State to track new message input
-  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setNewMessage(e.target.value); // Update new message input state
@@ -30,14 +29,7 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    // Check if auth_key is present in localStorage
-    const authKey = localStorage.getItem("auth_key");
-    if (!authKey) {
-      // If auth_key is not set, redirect to login
-      navigate("/");
-    }
-  }, []);
+  
 
   // If auth_key is not set, return null to prevent rendering
   if (!localStorage.getItem("auth_key")) {

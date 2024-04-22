@@ -35,12 +35,11 @@ export default function OTPVerification( request_id) {
   // Function to handle form submission (e.g., OTP validation)
   const handleSubmit = async (event) => {
     event.preventDefault();
-    navigate("/Dashboard")
     // Validate the OTP (for demo purposes, just navigate to success page)
     const enteredOTP = otp.join("");
     
     console.log(request_id.reqid, enteredOTP)
-    fetch("http://localhost:8080/verify", {
+    fetch("http://localhost:8080/otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,13 +50,16 @@ export default function OTPVerification( request_id) {
        if (!response.ok) {
           throw new Error("OTP verification failed");
         }
+
       return response.json();
     })
      .then((data) => {
+      Window.prompt("OTP verified successfully. Please login now.");
       navigate("/");
     })
      .catch((error) => {
       console.error("Error verifying OTP", error);
+      Window.prompt("OTP verification failed. Please try again");
       setVerificationError("OTP verification failed. Please try again");
     });
   };

@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import OTPVerification from "./OTPVerification";
+import Dashboard from "./Dashboard";
 
 export default function Auth() {
   const navigate = useNavigate();
   const [authMode, setAuthMode] = useState("signin");
   const [otp, setOTP] = useState(false);
   const [reqid, setReqId] = useState(false);
+  const [dashb, setDashb] = useState(false);
   
   const changeAuthMode = () => {
     setAuthMode(authMode === "signin" ? "signup" : "signin");
@@ -24,7 +26,7 @@ export default function Auth() {
       const password = formData.get("password");
 
       // Assuming you have an endpoint to send the data
-      const url = "http://localhost:8080/register/";
+      const url = "http://localhost:8080/register";
       const data = {
         email,
         name,
@@ -70,7 +72,7 @@ export default function Auth() {
       const password = formData.get("password");
 
       // Assuming you have an endpoint to send the data
-      const url = "http://localhost:8080/login/";
+      const url = "http://localhost:8080/login";
       const data = {
         email,
         password
@@ -89,10 +91,13 @@ export default function Auth() {
           // If the response is successful, parse the response JSON
           const responseData = await response.json();
           // Assuming responseData contains message and requestId
-          const message = responseData;
-          localStorage.setItem('auth_key', message)
+          const message = responseData["auth"];
+          localStorage.setItem('auth_key_llm', message)
+          localStorage.setItem('email_llm', email)
+          console.log("Response message:", message);
+          console.log("Request ID:", email);
+          setDashb(true);
           // navigate("/dashboard")
-          navigate("/choices")
 
         } else {
           // Handle error cases here
@@ -105,6 +110,43 @@ export default function Auth() {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      // Check if auth_key is present in localStorage
+      const email = localStorage.getItem("email_llm");
+      const auth = localStorage.getItem("auth_key_llm");
+      if (auth && email) {
+        try {
+          const response = await fetch('http://localhost:8080/auth', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, auth }),
+          });
+          if (response.ok) {
+            console.log('Authenticated successfully!');
+            setDashb(true);
+          } else {
+            const data = await response.json(); // Parse error response
+            console.log('Authentication failed:', data.error);
+            // Handle error as needed
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          console.log('An error occurred while authenticating.');
+          // Handle error as needed
+        }
+      }
+    };
+  
+    fetchData(); // Call the async function
+  }, []);
+
+
+  if (dashb) {
+    return <Dashboard />;
+  }
   if (authMode=="signup" && otp) {
     console.log(reqid)
     return <OTPVerification {...{reqid}} />;

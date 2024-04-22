@@ -4,11 +4,15 @@ package com.llm.backend.Controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,26 +26,34 @@ import com.llm.backend.Model.UserData;
 
 
 
-@CrossOrigin("*")
+@Configuration
 @RestController
 public class Controller {
 
     static Map<String, String> data;
-    static HashMap<Integer, String> ids ;
-    static int reqId;
-    static HashMap<Integer, UserData> users;
+    static HashMap<String, String> ids ;
+    static HashMap<String, UserData> users;
 
     static{
         EnvData envData = new EnvData();
         envData.loadDataFromEnvFile();
         data = envData.getData();
         ids = new HashMap<>();
-        reqId = 0;
         users = new HashMap<>();
     }
 
 
-    
+    @Bean
+    public WebMvcConfigurer configure() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry){
+                registry.addMapping("/**").allowedOrigins("http://localhost:3000", "https://localhost:3000", "http://127.0.0.1:3000", "http://127.0.0.1:3000")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*");
+            }
+        };
+    }
 
 
     @PostMapping("/register")
@@ -74,26 +86,25 @@ public class Controller {
             return ResponseEntity.badRequest().body("An error occurred while checking for existing email.");
         }
         connectSQL.closeConnection();
-        reqId++;
         OTPGenerator otpGenerator = new OTPGenerator();
         String otp = otpGenerator.generateOTP();
-        ids.put(reqId, otp);
-        users.put(reqId, userData);
+        ids.put(email, otp);
+        users.put(email, userData);
         String mailBody = "Dear "+name+",\n\n Thank you for using our service. Here is your One Time Password (OTP): \n\n OTP: "+otp+"\n\n  Please do not share this OTP with anyone. Our team will never ask for your OTP.\n\n If you didn't request this OTP, please ignore this email.\n\n Best regards,\n\n Your Team";
         SendMail sendMail = new SendMail(
             data.get("MAIL"),
             data.get("APP_PASSWORD")
         );
         sendMail.send(email, "One Time Password (OTP)", mailBody);
-        return ResponseEntity.ok().body(Map.of("message", "OTP sent successfully", "request_id", reqId));
+        return ResponseEntity.ok().body(Map.of("message", "OTP sent successfully", "request_id", email));
 
     }
 
     @PostMapping("/otp")
     public ResponseEntity<?> otp(@RequestBody Map<String, String> body) {
-        int requestId = Integer.parseInt(body.get("requestId"));
-        if (!ids.containsKey(requestId)) {
-            return ResponseEntity.badRequest().body("RequestId is invalid");
+        String email = body.get("requestId");
+        if (!ids.containsKey(email)) {
+            return ResponseEntity.badRequest().body("email is invalid");
         }
         String otp = body.get("otp");
         if (otp == null) {
@@ -105,7 +116,7 @@ public class Controller {
         else if(!otp.matches("[0-9]+")){
             return ResponseEntity.badRequest().body("OTP should contain only numbers.");
         }
-        else if(!ids.get(requestId).equals(otp)){
+        else if(!ids.get(email).equals(otp)){
             return ResponseEntity.badRequest().body("Invalid OTP.");
         }
         OTPGenerator otpGenerator = new OTPGenerator();
@@ -121,15 +132,15 @@ public class Controller {
         connectSQL.initiateConnection();
         try{
             Statement state = connectSQL.getStatement();
-            state.executeUpdate("Insert into users (email, password, name, auth) values ('"+users.get(requestId).email+"', '"+users.get(requestId).password+"', '"+users.get(requestId).name+"' , '"+auth+"')");
+            state.executeUpdate("Insert into users (email, password, name, auth) values ('"+users.get(email).email+"', '"+users.get(email).password+"', '"+users.get(email).name+"' , '"+auth+"')");
             connectSQL.closeStatement(state);
             connectSQL.closeConnection();
         } catch (SQLException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("An error occurred while updating User Details.");
         }
-        ids.remove(requestId);
-        users.remove(requestId);
+        ids.remove(email);
+        users.remove(email);
         return ResponseEntity.ok().body(Map.of("message", auth));
 
     }
@@ -164,6 +175,42 @@ public class Controller {
             connectSQL.closeStatement(state);
             connectSQL.closeConnection();
             return ResponseEntity.ok().body(Map.of("message", "Login successful", "auth", auth));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("An error occurred while checking for existing email.");
+        }
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<?> auth(@RequestBody Map<String, String> body) {
+        String auth = body.get("auth");
+        String email = body.get("email");
+        if (auth == null || email == null) {
+            return ResponseEntity.badRequest().body("Email and Auth is required.");
+        }
+        ConnectSQL connectSQL = new ConnectSQL(
+            data.get("SQL_HOST"),
+            data.get("SQL_USERNAME"),
+            data.get("SQL_PASSWORD"),
+            data.get("SQL_PORT")
+        );
+        connectSQL.initiateConnection();
+        try{
+            Statement state = connectSQL.getStatement();
+            ResultSet rs = state.executeQuery("select * from users where email = '" + email+"'");
+            if (!rs.next()) {
+                connectSQL.closeStatement(state);
+                connectSQL.closeConnection();
+                return ResponseEntity.badRequest().body("Email does not exist.");
+            }
+            if (!rs.getString("auth").equals(auth)) {
+                connectSQL.closeStatement(state);
+                connectSQL.closeConnection();
+                return ResponseEntity.badRequest().body("Invalid Auth.");
+            }
+            connectSQL.closeStatement(state);
+            connectSQL.closeConnection();
+            return ResponseEntity.ok().body(Map.of("message", "Auth successful"));
         } catch (SQLException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("An error occurred while checking for existing email.");
