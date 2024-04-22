@@ -31,10 +31,7 @@ const Dashboard = () => {
 
   
 
-  // If auth_key is not set, return null to prevent rendering
-  if (!localStorage.getItem("auth_key")) {
-    return null;
-  }
+  
 
   const handleNewChat = () => {
     const newChat = [];

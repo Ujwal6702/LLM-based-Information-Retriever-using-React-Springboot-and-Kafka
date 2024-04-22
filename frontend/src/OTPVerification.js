@@ -1,12 +1,14 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./App.css"; 
+import Dashboard from "./Dashboard";
 
 export default function OTPVerification( request_id) {
   const navigate = useNavigate();
   const [otp, setOTP] = useState(["", "", "", "", "", ""]); // Array to hold each digit of OTP
   const inputRefs = useRef([]); // Refs to manage focus between input boxes
   const [verificationError, setVerificationError] = useState(null);
+  const [dashb, setDashb] = useState(false);
 
   // Function to handle changes in OTP input boxes
   const handleChange = (index, value) => {
@@ -54,12 +56,15 @@ export default function OTPVerification( request_id) {
       return response.json();
     })
      .then((data) => {
-      Window.prompt("OTP verified successfully. Please login now.");
-      navigate("/");
+      localStorage.setItem("auth_key_llm", data['message']);
+      console.log(data['auth']);
+      setDashb(true);
+      localStorage.setItem("email_llm", request_id.reqid);
+      alert("OTP verified successfully.");
     })
      .catch((error) => {
       console.error("Error verifying OTP", error);
-      Window.prompt("OTP verification failed. Please try again");
+      alert("OTP verification failed. Please try again");
       setVerificationError("OTP verification failed. Please try again");
     });
   };
@@ -77,6 +82,10 @@ export default function OTPVerification( request_id) {
       className="otp-input"
     />
   ));
+
+  if (dashb) {
+    return <Dashboard />;
+  }
 
   return (
     <div className="OTP-verification-container">

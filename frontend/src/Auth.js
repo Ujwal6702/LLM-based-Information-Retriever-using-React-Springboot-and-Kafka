@@ -59,6 +59,7 @@ export default function Auth() {
           }
         } else {
           // Handle error cases here
+          alert("User already exists! Please sign in.")
           console.error("Error:", response.statusText);
         }
       } catch (error) {
