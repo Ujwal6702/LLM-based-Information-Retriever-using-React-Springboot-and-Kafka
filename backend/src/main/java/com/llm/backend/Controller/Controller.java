@@ -9,10 +9,20 @@ import com.llm.backend.Model.EnvData;
 import java.util.*;
 import com.llm.backend.Model.ConnectSQL;
 import java.sql.Statement;
+import com.llm.backend.Model.SendMail;
 
 
 @RestController
 public class Controller {
+
+    static Map<String, String> data;
+
+    static{
+        EnvData envData = new EnvData();
+        envData.loadDataFromEnvFile();
+        data = envData.getData();
+    }
+
     /*@PostMapping("/register")
     public String (@RequestBody  entit y) {
         TODO: process POST request
@@ -21,19 +31,25 @@ public class Controller {
     }*/
 
     public static void main(String[] args){
-        EnvData envData = new EnvData();
-        envData.loadDataFromEnvFile();
-        Map<String, String> data = envData.getData();
-        ConnectSQL connectSQl = new ConnectSQL(
+        
+        /*ConnectSQL connectSQl = new ConnectSQL(
             data.get("SQL_HOST"),
             data.get("SQL_USERNAME"),
             data.get("SQL_PASSWORD"),
             data.get("SQL_PORT")
         );
         connectSQl.initiateConnection();
-        connectSQl.closeConnection();
+        connectSQl.closeConnection();*/
+        SendMail sendMail = new SendMail(
+            data.get("MAIL"),
+            data.get("APP_PASSWORD")
+        );
+        sendMail.send("ujwalujwalc@gmail.com", "Test", "Test mail from LLM");
+
 
     }
+
+
 
     
 
