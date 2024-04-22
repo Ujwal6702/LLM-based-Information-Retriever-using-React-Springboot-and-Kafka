@@ -24,7 +24,7 @@ export default function Auth() {
       const password = formData.get("password");
 
       // Assuming you have an endpoint to send the data
-      const url = "http://localhost:8000/register/";
+      const url = "http://localhost:8080/register/";
       const data = {
         email,
         name,
@@ -70,7 +70,7 @@ export default function Auth() {
       const password = formData.get("password");
 
       // Assuming you have an endpoint to send the data
-      const url = "http://localhost:8000/login/";
+      const url = "http://localhost:8080/login/";
       const data = {
         email,
         password

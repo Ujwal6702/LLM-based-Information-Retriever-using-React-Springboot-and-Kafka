@@ -51,7 +51,22 @@ def sendMail(mail, subject, body):
 reqid = [0]
 ids = {}
 verify_data = {}
+origins = [
+    "http://localhost",
+    "http://localhost:8080",  # Add your frontend URL here
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3000"
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
 
 
 
@@ -88,22 +103,7 @@ def otpMail(mail, name, password):
 
 app = FastAPI()
 
-origins = [
-    "http://localhost",
-    "http://localhost:8080",  # Add your frontend URL here
-    "http://localhost:3000",
-    "http://localhost:8000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3000"
-]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["*"],
-)
 
 
 

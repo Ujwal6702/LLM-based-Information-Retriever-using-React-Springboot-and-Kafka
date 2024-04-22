@@ -40,7 +40,7 @@ export default function OTPVerification( request_id) {
     const enteredOTP = otp.join("");
     
     console.log(request_id.reqid, enteredOTP)
-    fetch("http://localhost:8000/verify/", {
+    fetch("http://localhost:8080/verify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
