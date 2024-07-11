@@ -51,7 +51,7 @@ This architecture provides a robust foundation for building a scalable and secur
 
 ## Architecture
 
-`images/Architecture.png`
+![Architecture diagram](images\Architecture.png)
 
 ## How to Run
 
@@ -94,6 +94,19 @@ This architecture provides a robust foundation for building a scalable and secur
    ```
 
 Follow these steps to set up and run the project successfully.
+
+## Output
+
+![Output Image](images/1.png)
+![Output Image](images/2.png)
+![Output Image](images/4.png)
+![Output Image](images/3.png)
+![Output Image](images/5.png)
+![Output Image](images/6.png)
+![Output Image](images/7.png)
+![Output Image](images/8.png)
+![Output Image](images/9.png)
+![Output Image](images/10.png)
 
 
 
