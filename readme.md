@@ -51,7 +51,7 @@ This architecture provides a robust foundation for building a scalable and secur
 
 ## Architecture
 
-![Architecture diagram](images\Architecture.png)
+![Architecture diagram](images/Architecture.png)
 
 ## How to Run
 
