@@ -15,3 +15,4 @@ credentials/
 tempCodeRunnerFile.py
 output/
 *.xlsx
+.vscode/
