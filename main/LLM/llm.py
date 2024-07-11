@@ -198,5 +198,5 @@ def getExtendedChatResponse( prompt, history = [] ):
 
     return res, history
 
-response = getExtendedPromptResponse( "Explain theory of relativity in the easiest way..")
+response = getExtendedPromptResponse( "What is the temperature in hassan?")
 print(response)

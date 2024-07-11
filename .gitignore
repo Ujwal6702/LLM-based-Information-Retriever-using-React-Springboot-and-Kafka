@@ -1,0 +1,17 @@
+
+*.py[cod]
+*.pyc
+*.pyo
+__pycache__/
+.env
+*.env
+*.venv
+venv/
+ENV/
+env/
+.venv/
+*.csv
+credentials/
+tempCodeRunnerFile.py
+output/
+*.xlsx
